@@ -7,7 +7,7 @@ function PromptDiv() {
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
-      console.log("Texto enviado:", text);
+      console.log("sent", text);
       setText('');
     }
   };
@@ -24,7 +24,6 @@ function PromptDiv() {
   }, [text]);
 
   return (
-    <div className="flex items-center justify-center p-4">
       <textarea
         ref={textareaRef}
         className="w-[75vw] lg:w-[60vw] 2xl:w-[50vw] p-4
@@ -38,13 +37,6 @@ function PromptDiv() {
         onKeyDown={handleKeyDown}
         rows={1}
       />
-      <button
-        className="bg-blue-500 hover:bg-blue-700 text-white p-3 ml-2 rounded-xl
-          transition-all ease-in-out duration-300 text-lg font-semibold"
-      >
-        Send
-      </button>
-    </div>
   );
 }
 
