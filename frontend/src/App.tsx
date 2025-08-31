@@ -1,9 +1,25 @@
 import Header from "./components/Header";
 import PromptArea from "./components/PromptArea";
 import { useState } from "react";
+import axios from 'axios'
 
 function App() {
   const [isBottom, setIsBottom] = useState(false);
+  const [prompt, setPrompt] = useState("");
+  const [response, setResponse] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  async function handleSend() {
+    setLoading(true);
+    try {
+      const res = await axios.post('http://localhost:8080/api/send', { prompt });
+      setResponse(res.data.response);
+    } catch (error) {
+      console.error("error sending prompt:", error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <div className="bg-gray-500 h-screen flex flex-col items-center justify-center relative">
@@ -15,7 +31,7 @@ function App() {
           <div className="bg-white p-8 rounded-xl shadow-2xl text-black text-2xl text-center
           w-[90vw] sm:w-[85vw] lg:w-[70vw] xl:w-[55vw]
           ">
-            im the biggest bird
+            {loading ? "Loading..." : response}
           </div>
         </div>
       )}
@@ -24,13 +40,16 @@ function App() {
         className={`flex justify-center items-center transition-all duration-300 
         ${isBottom ? "absolute bottom-4 w-full z-0" : ""}`}
       >
-        <PromptArea />
+        <PromptArea value={prompt}
+        onChange={(e) => setPrompt(e.target.value)}
+        onEnter={handleSend}
+        />
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white p-3 ml-2 rounded-xl
           transition-all ease-in-out duration-300 text-lg font-semibold hover:cursor-pointer"
           onClick={(e) => {
             e.preventDefault();
-            //handleSend();
+            handleSend();
             setIsBottom(!isBottom);
           }}
         >
@@ -40,5 +59,6 @@ function App() {
     </div>
   );
 }
+
 
 export default App;
