@@ -2,6 +2,10 @@ import Header from "./components/Header";
 import PromptArea from "./components/PromptArea";
 import { useState } from "react";
 import axios from 'axios'
+import ReactMarkdown from 'react-markdown';
+import rehypeHighlight from 'rehype-highlight';
+import 'highlight.js/styles/github.css'; // ou outro tema da tua escolha
+
 
 function App() {
   const [isBottom, setIsBottom] = useState(false);
@@ -13,7 +17,9 @@ function App() {
     setLoading(true);
     try {
       const res = await axios.post('http://localhost:8080/api/send', { prompt });
-      setResponse(res.data.response);
+      setResponse(res.data);
+      setIsBottom(true);
+      console.log("response:", res.data);
     } catch (error) {
       console.error("error sending prompt:", error);
     } finally {
@@ -27,13 +33,22 @@ function App() {
       <h1 className="text-4xl mb-4">Talk to AI</h1>
 
       {isBottom && (
-        <div className="absolute flex justify-center items-center z-10">
-          <div className="bg-white p-8 rounded-xl shadow-2xl text-black text-2xl text-center
-          w-[90vw] sm:w-[85vw] lg:w-[70vw] xl:w-[55vw]
-          ">
-            {loading ? "Loading..." : response}
-          </div>
-        </div>
+       <div className="absolute flex justify-center items-center z-10">
+  <div className="bg-white p-6 rounded-xl shadow-2xl text-black max-h-[80vh] overflow-y-auto
+      w-[90vw] sm:w-[85vw] lg:w-[70vw] xl:w-[55vw]"
+  >
+    {loading ? "Loading..." : (
+      <div className="prose prose-gray max-w-none">
+        <ReactMarkdown
+          rehypePlugins={[rehypeHighlight]}
+        >
+          {response}
+        </ReactMarkdown>
+      </div>
+    )}
+  </div>
+</div>
+
       )}
 
       <div
@@ -50,7 +65,6 @@ function App() {
           onClick={(e) => {
             e.preventDefault();
             handleSend();
-            setIsBottom(!isBottom);
           }}
         >
           Send
