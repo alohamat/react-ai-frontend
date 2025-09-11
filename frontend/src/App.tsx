@@ -14,6 +14,7 @@ function App() {
   const [loading, setLoading] = useState(false);
 
   async function handleSend() {
+    setIsBottom(true);
     setLoading(true);
     try {
       const res = await axios.post('http://localhost:8080/api/send', { prompt });
@@ -37,7 +38,7 @@ function App() {
   <div className="bg-white p-6 rounded-xl shadow-2xl text-black max-h-[80vh] overflow-y-auto
       w-[90vw] sm:w-[85vw] lg:w-[70vw] xl:w-[55vw]"
   >
-    {loading ? "Loading..." : (
+    {loading ? "Loading response, please wait..." : (
       <div className="prose prose-gray max-w-none">
         <ReactMarkdown
           rehypePlugins={[rehypeHighlight]}
