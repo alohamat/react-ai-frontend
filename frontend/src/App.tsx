@@ -17,7 +17,7 @@ function App() {
     setIsBottom(true);
     setLoading(true);
     try {
-      const res = await axios.post('http://localhost:8080/api/send', { prompt });
+      const res = await axios.post('go-ai-chatbot-production.up.railway.app/api/send', { prompt });
       setResponse(res.data);
       setIsBottom(true);
       console.log("response:", res.data);
